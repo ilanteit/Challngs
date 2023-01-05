@@ -55,6 +55,25 @@ class UpdateData {
         val reference = database.getReference("Users")
         reference.child(id).child("pass").setValue(newPass)
     }
+    
+    
+    fun updatePersonalScore(newScore: Int) {
+    val database = FirebaseDatabase.getInstance()
+    val reference = database.getReference("Users")
+
+    reference.child("personal_score").addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            val currentScore = dataSnapshot.getValue(Int::class.java) ?: 0
+            val updatedScore = currentScore + newScore
+            reference.child("personal_score").setValue(updatedScore)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // An error occurred
+            Log.e("Firebase", error.toException().toString())
+        }
+    })
+}
 
 
 
